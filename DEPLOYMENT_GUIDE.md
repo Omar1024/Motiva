@@ -15,6 +15,11 @@
 - [x] All error handling with try-catch blocks
 - [x] Database operation timeouts
 
+### 🖼️ **Before Deploying - Create Social Media Banner**
+- [ ] Create OG image (1200x630 pixels) for social media sharing
+- [ ] Save as `public/og-image.png`
+- [ ] See `OG_IMAGE_GUIDE.md` for easy step-by-step instructions
+
 ---
 
 ## 🌐 Deploying to Netlify
@@ -27,6 +32,8 @@ npm run build
 ```
 
 2. **If build succeeds, you're ready!** If there are errors, fix them first.
+
+**Note:** A `netlify.toml` file is included in the project root with correct configuration for Netlify deployment.
 
 ### **Step 2: Sign Up / Log In to Netlify**
 
@@ -56,7 +63,7 @@ git push -u origin main
 
 3. Configure build settings:
    - **Build command:** `npm run build`
-   - **Publish directory:** `.next`
+   - **Publish directory:** (leave empty)
    - **Framework preset:** Next.js
    
 4. Click "Deploy site"
@@ -228,11 +235,21 @@ Visit your Netlify URL and test:
 2. Add your site URL for monitoring
 3. Get alerts if site goes down
 
-### **4. Social Media Setup**
+### **4. Social Media Setup & Banner Testing**
 
-- Test Open Graph preview: [https://www.opengraph.xyz](https://www.opengraph.xyz)
-- Test Twitter Card: [https://cards-dev.twitter.com/validator](https://cards-dev.twitter.com/validator)
-- Share on social media to test preview
+**Test Your Social Media Banner:**
+1. Go to [https://www.opengraph.xyz](https://www.opengraph.xyz)
+2. Enter your website URL
+3. You should see your banner (1200x630 image) in the preview
+4. Test on Twitter: [https://cards-dev.twitter.com/validator](https://cards-dev.twitter.com/validator)
+5. Test on Facebook: [https://developers.facebook.com/tools/debug/](https://developers.facebook.com/tools/debug/)
+6. Test on LinkedIn: Share your link and check preview
+
+**If Banner Doesn't Show:**
+- Make sure `og-image.png` exists in `public` folder
+- Clear cache and redeploy
+- Wait 24 hours for social media caches to update
+- Use the platform's debug tools to refresh cache
 
 ---
 
@@ -336,6 +353,22 @@ Netlify automatically:
 ---
 
 ## 🐛 Troubleshooting
+
+### **404 Not Found / OpenResty Error**
+
+**Symptoms:** Site shows "404 Not Found" with "openresty" error
+
+**Cause:** Incorrect publish directory configuration
+
+**Fix:**
+1. Go to Netlify Dashboard → Your site → "Site settings" → "Build & deploy"
+2. Under "Build settings":
+   - **Build command:** `npm run build`
+   - **Publish directory:** (leave this EMPTY or remove `.next`)
+3. Go to "Deploys" → Click "Trigger deploy" → "Clear cache and deploy site"
+4. Wait 2-3 minutes for rebuild
+
+**Note:** Your project already includes a `netlify.toml` file with correct configuration. If the 404 error persists after the above fix, ensure the `netlify.toml` file is committed to your repository.
 
 ### **Build Fails on Netlify**
 
