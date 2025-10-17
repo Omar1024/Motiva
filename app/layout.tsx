@@ -22,13 +22,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://motiva.app',
+    url: 'https://motiva.obl.ee',
     siteName: 'Motiva',
     title: 'Motiva - Daily Motivation in Arabic & English',
     description: 'Get inspired with 2000+ beautiful motivational quotes in Arabic and English. Your daily dose of wisdom and inspiration.',
     images: [
       {
-        url: '/og-image.png',
+        url: 'https://motiva.obl.ee/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Motiva - Daily Motivation',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Motiva - Daily Motivation',
     description: 'Get inspired with beautiful motivational quotes in Arabic & English',
-    images: ['/og-image.png'],
+    images: ['https://motiva.obl.ee/og-image.png'],
   },
   robots: {
     index: true,
