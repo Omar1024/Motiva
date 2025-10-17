@@ -310,17 +310,16 @@ export default function HomeContent() {
     setUsedQuotes(new Set())
     setCurrentCategory('all')
     
-    // Update Quote of the Day for new language
-    const today = new Date().toDateString()
-    const savedQuoteOfDayDate = localStorage.getItem('motiva-quote-of-day-date') || localStorage.getItem('inspireme-quote-of-day-date')
+    // Immediately show a quote in the new language
+    const randomQuote = quotes[newLanguage][
+      Math.floor(Math.random() * quotes[newLanguage].length)
+    ]
+    setCurrentQuote(randomQuote)
     
-    if (savedQuoteOfDayDate === today) {
-      const randomQuote = quotes[newLanguage][
-        Math.floor(Math.random() * quotes[newLanguage].length)
-      ]
-      setQuoteOfDay(randomQuote)
-      localStorage.setItem('motiva-quote-of-day', JSON.stringify(randomQuote))
-    }
+    // Update Quote of the Day for new language
+    setQuoteOfDay(randomQuote)
+    localStorage.setItem('motiva-quote-of-day', JSON.stringify(randomQuote))
+    localStorage.setItem('motiva-quote-of-day-timestamp', Date.now().toString())
   }
 
   // Handle category change
