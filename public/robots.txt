@@ -6,6 +6,6 @@ Allow: /
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://motiva.app/sitemap.xml
+Sitemap: https://motiva.obl.ee/sitemap.xml
 
 
