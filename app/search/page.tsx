@@ -13,6 +13,7 @@ export default function SearchPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [results, setResults] = useState<Quote[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [totalQuotes, setTotalQuotes] = useState(0)
 
   const translations = {
     en: {
@@ -21,6 +22,8 @@ export default function SearchPage() {
       results: 'results found',
       noResults: 'No quotes found',
       tryDifferent: 'Try a different search term',
+      quotesAvailable: 'quotes available. Type at least 2 characters to search.',
+      backToHome: 'Back to Home',
       categories: {
         all: 'All',
         motivation: 'Motivation',
@@ -36,6 +39,8 @@ export default function SearchPage() {
       results: 'نتيجة',
       noResults: 'لم يتم العثور على اقتباسات',
       tryDifferent: 'جرب مصطلح بحث مختلف',
+      quotesAvailable: 'اقتباس متاح. اكتب حرفين على الأقل للبحث.',
+      backToHome: 'العودة للرئيسية',
       categories: {
         all: 'الكل',
         motivation: 'تحفيز',
@@ -54,7 +59,14 @@ export default function SearchPage() {
     if (savedLanguage) {
       setLanguage(savedLanguage as Language)
     }
+    // Set initial total quotes count
+    setTotalQuotes(quotes[savedLanguage as Language || 'en']?.length || 0)
   }, [])
+
+  // Update total quotes when language changes
+  useEffect(() => {
+    setTotalQuotes(quotes[language]?.length || 0)
+  }, [language])
 
   useEffect(() => {
     if (searchTerm.trim().length < 2) {
@@ -64,14 +76,33 @@ export default function SearchPage() {
 
     setIsSearching(true)
     const timer = setTimeout(() => {
-      const searchLower = searchTerm.toLowerCase()
-      const filteredQuotes = quotes[language].filter(
-        quote =>
-          quote.text.toLowerCase().includes(searchLower) ||
-          quote.author.toLowerCase().includes(searchLower)
-      )
-      setResults(filteredQuotes)
-      setIsSearching(false)
+      try {
+        const searchLower = searchTerm.toLowerCase().trim()
+        const languageQuotes = quotes[language] || []
+        
+        if (!languageQuotes || languageQuotes.length === 0) {
+          console.error('No quotes available for language:', language)
+          setResults([])
+          setIsSearching(false)
+          return
+        }
+        
+        const filteredQuotes = languageQuotes.filter(
+          quote => {
+            if (!quote) return false
+            const textMatch = quote.text?.toLowerCase().includes(searchLower) || false
+            const authorMatch = quote.author?.toLowerCase().includes(searchLower) || false
+            return textMatch || authorMatch
+          }
+        )
+        
+        setResults(filteredQuotes)
+        setIsSearching(false)
+      } catch (error) {
+        console.error('Search error:', error)
+        setResults([])
+        setIsSearching(false)
+      }
     }, 300)
 
     return () => clearTimeout(timer)
@@ -94,7 +125,7 @@ export default function SearchPage() {
           className="inline-flex items-center space-x-2 rtl:space-x-reverse text-cambridge-blue hover:text-white transition-colors mb-6"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>Back to Home</span>
+          <span>{t.backToHome}</span>
         </Link>
 
         <div className="mb-6">
@@ -124,6 +155,12 @@ export default function SearchPage() {
           {searchTerm && (
             <p className="text-cambridge-blue mt-3 text-sm">
               {isSearching ? 'Searching...' : `${results.length} ${t.results}`}
+            </p>
+          )}
+          
+          {!searchTerm && totalQuotes > 0 && (
+            <p className="text-cambridge-blue mt-3 text-sm">
+              {totalQuotes} {t.quotesAvailable}
             </p>
           )}
         </div>

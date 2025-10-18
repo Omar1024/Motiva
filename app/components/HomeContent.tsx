@@ -31,11 +31,8 @@ export default function HomeContent() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Initialize database with timeout
-        const initTimeout = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Database initialization timeout')), 5000)
-        )
-        await Promise.race([db.init(), initTimeout])
+        // Initialize database without strict timeout for better mobile support
+        await db.init()
         
         // Migrate from localStorage if needed
         await db.migrateFromLocalStorage()
@@ -245,11 +242,8 @@ export default function HomeContent() {
       const isFavorited = favorites.has(currentQuote.id)
       
       if (isFavorited) {
-        // Remove from IndexedDB
-        const removeTimeout = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Remove timeout')), 3000)
-        )
-        await Promise.race([db.removeFavorite(currentQuote.id), removeTimeout])
+        // Remove from IndexedDB (with fallback to localStorage)
+        await db.removeFavorite(currentQuote.id)
         
         setFavorites(prev => {
           const newFavorites = new Map(prev)
@@ -258,7 +252,7 @@ export default function HomeContent() {
         })
         showToast('Removed from favorites', 'info')
       } else {
-        // Add to IndexedDB
+        // Add to IndexedDB (with fallback to localStorage)
         const favorite: FavoriteQuote = {
           id: currentQuote.id,
           text: currentQuote.text,
@@ -268,10 +262,7 @@ export default function HomeContent() {
           favoritedAt: Date.now()
         }
         
-        const addTimeout = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Add timeout')), 3000)
-        )
-        await Promise.race([db.addFavorite(favorite), addTimeout])
+        await db.addFavorite(favorite)
         
         setFavorites(prev => {
           const newFavorites = new Map(prev)
@@ -291,10 +282,8 @@ export default function HomeContent() {
     if (!currentQuote) return
     
     try {
-      const ratingTimeout = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Rating timeout')), 3000)
-      )
-      await Promise.race([db.setRating(currentQuote.id, rating), ratingTimeout])
+      // Save rating (with fallback to localStorage)
+      await db.setRating(currentQuote.id, rating)
       
       setRatings(prev => new Map(prev).set(currentQuote.id, rating))
       showToast(`Rated ${rating} stars!`, 'success')

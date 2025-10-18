@@ -30,11 +30,11 @@ export default function Header({ language, onLanguageChange, showFavoritesLink =
     <header className="w-full px-4 py-3 sm:py-4 glass border-b border-white border-opacity-20 sticky top-0 z-50 backdrop-blur-lg">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link href="/" className="hover:opacity-80 transition-all duration-300 hover:scale-105">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight" style={{
-            fontFamily: 'system-ui, -apple-system, sans-serif',
+          <h1 className={`text-2xl sm:text-3xl font-extrabold text-white tracking-tight ${language === 'ar' ? 'font-cairo' : ''}`} style={{
+            fontFamily: language === 'ar' ? 'Cairo, system-ui, sans-serif' : 'system-ui, -apple-system, sans-serif',
             letterSpacing: '-0.02em'
           }}>
-            Motiva
+            {t.title}
           </h1>
         </Link>
         

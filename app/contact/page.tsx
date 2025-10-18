@@ -1,22 +1,43 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Mail, MessageSquare, Github } from 'lucide-react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { Language } from '../types'
 
 export default function Contact() {
+  const [language, setLanguage] = useState<Language>('en')
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('motiva-language') || localStorage.getItem('inspireme-language')
+    if (savedLanguage) {
+      setLanguage(savedLanguage as Language)
+    }
+  }, [])
+
+  const handleLanguageChange = (newLanguage: Language) => {
+    setLanguage(newLanguage)
+    localStorage.setItem('motiva-language', newLanguage)
+  }
+
+  const t = {
+    en: { backToHome: 'Back to Home' },
+    ar: { backToHome: 'العودة للرئيسية' }
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Header language="en" onLanguageChange={() => {}} showFavoritesLink={false} />
+      <Header language={language} onLanguageChange={handleLanguageChange} showFavoritesLink={false} />
       
       <main className="flex-1 px-4 py-8 sm:py-12 max-w-4xl mx-auto">
         <Link 
           href="/"
-          className="inline-flex items-center space-x-2 text-cambridge-blue hover:text-white transition-colors mb-6"
+          className="inline-flex items-center space-x-2 rtl:space-x-reverse text-cambridge-blue hover:text-white transition-colors mb-6"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span>Back to Home</span>
+          <span>{t[language].backToHome}</span>
         </Link>
 
         <div className="space-y-6">
@@ -150,7 +171,7 @@ export default function Contact() {
         </div>
       </main>
 
-      <Footer language="en" />
+      <Footer language={language} />
     </div>
   )
 }
