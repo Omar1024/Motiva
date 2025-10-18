@@ -4,6 +4,7 @@ import RegisterServiceWorker from './register-sw'
 import Analytics from './components/Analytics'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://motiva.obl.ee'),
   title: 'Motiva - Daily Motivation in Arabic & English',
   description: 'Get inspired with beautiful motivational quotes in Arabic and English. Share, favorite, and discover wisdom daily. 2000+ quotes across 5 categories.',
   keywords: 'motivation, quotes, inspiration, Arabic, English, daily quotes, wisdom, Motiva, motivational quotes, inspirational quotes, daily motivation',
